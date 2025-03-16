@@ -21,6 +21,10 @@ A simple command-line tool written in Go that generates HTML reports of git comm
 go build -o reporeport main.go
 ```
 
+## Screenshot
+
+![reporeport example](example.png "reporeport example")
+
 ## Usage
 
 Basic usage:
