@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Summary Report for {{.CompanyName}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .logo {
+            max-width: 250px;
+            max-height: 100px;
+            margin-right: 25px;
+        }
+        .report-info {
+            flex-grow: 1;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .date-range {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        /* Table styles */
+        .commits-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .commits-table th {
+            background-color: #f2f2f2;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            position: sticky;
+            top: 0;
+        }
+        .commits-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        .commit-row:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .hash {
+            font-family: monospace;
+            color: #e74c3c;
+            width: 90px;
+        }
+        .date {
+            color: #7f8c8d;
+            width: 180px;
+        }
+        .author {
+            font-weight: bold;
+            width: 150px;
+        }
+        .subject-cell {
+            max-width: 300px;
+        }
+        .subject {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .body {
+            white-space: pre-wrap;
+            color: #555;
+            font-size: 13px;
+            margin-top: 5px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .files-cell {
+            max-width: 250px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .file {
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .stats {
+            width: 80px;
+            white-space: nowrap;
+        }
+        .additions {
+            color: #27ae60;
+        }
+        .deletions {
+            color: #e74c3c;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        {{if .LogoPath}}
+        <img src="{{.LogoPath}}" alt="{{.CompanyName}} Logo" class="logo">
+        {{end}}
+        <div class="report-info">
+            <h1>Work Summary Report for {{.CompanyName}}</h1>
+            <div class="date-range">
+                From {{.StartDate.Format "January 2, 2006"}} to {{.EndDate.Format "January 2, 2006"}}
+            </div>
+            <div>Repository: {{.RepoPath}}</div>
+        </div>
+    </div>
+
+    <h2>Commits ({{len .Commits}})</h2>
+
+    <table class="commits-table">
+        <thead>
+            <tr>
+                <th>Hash</th>
+                <th>Date</th>
+                <th>Author</th>
+                <th>Subject</th>
+                <th>Stats</th>
+                <th>Files Changed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Commits}}
+            <tr class="commit-row">
+                <td class="hash">{{slice .Hash 0 8}}</td>
+                <td class="date">{{.Date.Format "Jan 2, 2006 15:04:05"}}</td>
+                <td class="author">{{.Author}}</td>
+                <td class="subject-cell">
+                    <div class="subject">{{.Subject}}</div>
+                    {{if .Body}}
+                    <div class="body">{{.Body}}</div>
+                    {{end}}
+                </td>
+                <td class="stats">
+                    {{if gt .Additions 0}}<span class="additions">+{{.Additions}}</span>{{end}}
+                    {{if gt .Deletions 0}}<span class="deletions">-{{.Deletions}}</span>{{end}}
+                </td>
+                <td class="files-cell">
+                    {{range .Files}}
+                    <div class="file">{{.}}</div>
+                    {{end}}
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Report generated at {{.GeneratedAt.Format "January 2, 2006 15:04:05"}}
+    </div>
+</body>
+</html>
